@@ -21,8 +21,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 
     Route::resource('note', NoteController::class);
+
+    //books
     Route::get('/books', [BookController::class, 'listBooks']);
     Route::get('/books', [BookController::class, 'listBooks'])->name('books.index');
+    Route::get('/books', [BookController::class, 'index'])->name('books.index');
 });
 
 
