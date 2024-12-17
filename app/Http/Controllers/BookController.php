@@ -18,6 +18,16 @@ class BookController extends Controller
         return response()->json(Book::all(), 200);
 
     }
+    
+    public function listBooks()
+{
+    // Ambil semua data buku dari database
+    $books = Book::all();
+
+    // Kirim data buku ke view 'books.index'
+    return view('books.index', compact('books'));
+}
+
 
     /**
      * Show the form for creating a new resource.

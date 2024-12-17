@@ -2,9 +2,10 @@
 
 use App\Http\Controllers\NoteController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\BookController;
 use Illuminate\Support\Facades\Route;
 
-Route::redirect('/', '/note')->name('dashboard');
+Route::redirect('/', '/books')->name('dashboard');
 
 
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -20,6 +21,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 
     Route::resource('note', NoteController::class);
+    Route::get('/books', [BookController::class, 'listBooks']);
+    Route::get('/books', [BookController::class, 'listBooks'])->name('books.index');
 });
 
 
