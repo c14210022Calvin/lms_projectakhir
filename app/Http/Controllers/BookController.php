@@ -13,8 +13,8 @@ class BookController extends Controller
      */
     public function index(Request $request)
     {
-        // //
-        // // return Book::all();
+        //
+        // return Book::all();
         // return response()->json(Book::all(), 200);
 
         $query = Book::query();
@@ -30,6 +30,12 @@ class BookController extends Controller
         }
 
         $books = $query->get();
+
+        // Jika request menginginkan JSON (misalnya untuk testing)
+        if ($request->wantsJson() || $request->has('api')) {
+            $books = Book::all();
+            return response()->json($books, 200);
+        }
 
         return view('books.index', compact('books', 'search'));
 
