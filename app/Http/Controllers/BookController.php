@@ -19,6 +19,9 @@ class BookController extends Controller
 
         $query = Book::query();
 
+        // Definisikan $search terlebih dahulu agar selalu tersedia
+        $search = null;
+
         // Jika ada parameter search, filter data
         if ($request->has('search')) {
             $search = $request->input('search');
