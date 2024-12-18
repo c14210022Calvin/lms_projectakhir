@@ -32,19 +32,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
 // Middleware untuk user dengan role "admin"
 Route::middleware(['auth', 'verified', RoleMiddleware::class . ':admin'])->group(function () {
     // Route khusus untuk Admin
-    // Route::resource('note', NoteController::class);
+    Route::get('/books/create', [BookController::class, 'create'])->name('books.create');
+    Route::post('/books', [BookController::class, 'store'])->name('books.store');
 
-    // // Admin dapat mengakses semua route books
-    // Route::get('/books', [BookController::class, 'listBooks'])->name('books.index');
-    // Route::get('/books', [BookController::class, 'index'])->name('books.index');
+    // Route Edit dan Update Buku
+    Route::get('/books/{book}/edit', [BookController::class, 'edit'])->name('books.edit');
+    Route::put('/books/{book}', [BookController::class, 'update'])->name('books.update');
 });
 
 // Middleware untuk user biasa dengan role "user"
 Route::middleware(['auth', RoleMiddleware::class . ':user'])->group(function () {
     // Profile routes khusus untuk User
-    // Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    // Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    // Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
 Route::middleware('auth')->group(function () {
