@@ -57,6 +57,7 @@ class BookController extends Controller
     public function create()
     {
         //tes
+        return view('books.create');
     }
 
     /**
@@ -83,7 +84,13 @@ class BookController extends Controller
 
             \Log::info('Book Created:', $book->toArray());  // Logging book creation
 
-            return response()->json($book, 201);
+            // Cek apakah request JSON atau biasa
+            if ($request->wantsJson()) {
+                return response()->json($book, 201);
+            }
+
+            // Redirect ke halaman daftar buku dengan pesan sukses
+            return redirect()->route('books.index')->with('success', 'Buku berhasil ditambahkan!');
         } catch (\Exception $e) {
             \Log::error('Error Creating Book:', ['message' => $e->getMessage()]);
             return response()->json(['error' => 'Failed to create book', 'message' => $e->getMessage()], 500);
@@ -109,6 +116,8 @@ class BookController extends Controller
     public function edit(Book $book)
     {
         //
+        // Return view untuk form edit buku dengan data buku yang dipilih
+        return view('books.edit', compact('book'));
     }
 
     /**
@@ -117,17 +126,27 @@ class BookController extends Controller
     public function update(Request $request, $id)
     {
         //
-        $book = Book::findOrFail($id);
-        $validated = $request->validate([
-            'title' => 'required',
-            'author' => 'required',
-            'year' => 'required|integer',
-            'isbn' => 'required',
-            'copies' => 'required|integer',
-        ]);
+        try {
+            $book = Book::findOrFail($id);
+            $validated = $request->validate([
+                'title' => 'required',
+                'author' => 'required',
+                'year' => 'required|integer',
+                'isbn' => 'required',
+                'copies' => 'required|integer',
+            ]);
 
-        $book->update($validated);
-        return $book;
+            $book->update($validated);
+            // return $book;
+            if ($request->wantsJson()) {
+                return response()->json($book, 200);
+            }
+
+            return redirect()->route('books.index')->with('success', 'Buku berhasil diperbarui!');
+        } catch (\Exception $e) {
+            \Log::error('Error Updating Book:', ['message' => $e->getMessage()]);
+            return redirect()->back()->withErrors('Gagal memperbarui buku.');
+        }
     }
 
     /**
@@ -136,7 +155,16 @@ class BookController extends Controller
     public function destroy($id)
     {
         //
-        Book::findOrFail($id)->delete();
-        return response()->noContent();
+        // Book::findOrFail($id)->delete();
+        // return response()->noContent();
+        try {
+            $book = Book::findOrFail($id);
+            $book->delete();
+
+            return redirect()->route('books.index')->with('success', 'Buku berhasil dihapus!');
+        } catch (\Exception $e) {
+            \Log::error('Error Deleting Book:', ['message' => $e->getMessage()]);
+            return redirect()->back()->withErrors('Gagal menghapus buku.');
+        }
     }
 }
