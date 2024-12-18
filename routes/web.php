@@ -3,7 +3,9 @@
 use App\Http\Controllers\NoteController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\BookController;
+use App\Http\Middleware\RoleMiddleware;
 use Illuminate\Support\Facades\Route;
+
 
 Route::redirect('/', '/books')->name('dashboard');
 
@@ -19,7 +21,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 // Route::put('/note/{id}', [NoteController::class,'update'])->name('note.update');
 // Route::delete('/note/{id}', [NoteController::class,'destroy'])->name('note.destroy');
 
-
     Route::resource('note', NoteController::class);
 
     //books
@@ -28,7 +29,23 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/books', [BookController::class, 'index'])->name('books.index');
 });
 
+// Middleware untuk user dengan role "admin"
+Route::middleware(['auth', 'verified', RoleMiddleware::class . ':admin'])->group(function () {
+    // Route khusus untuk Admin
+    // Route::resource('note', NoteController::class);
 
+    // // Admin dapat mengakses semua route books
+    // Route::get('/books', [BookController::class, 'listBooks'])->name('books.index');
+    // Route::get('/books', [BookController::class, 'index'])->name('books.index');
+});
+
+// Middleware untuk user biasa dengan role "user"
+Route::middleware(['auth', RoleMiddleware::class . ':user'])->group(function () {
+    // Profile routes khusus untuk User
+    // Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    // Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    // Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
