@@ -47,11 +47,16 @@
                 </div>
 
                 <!-- Tombol Simpan -->
-                <div class="flex justify-end">
+                <div class="flex justify-end  space-x-4">
                     <button type="submit"
                         class="px-5 py-3 bg-indigo-500 text-white font-medium rounded-lg shadow-md hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition ease-in-out duration-300">
                         Simpan Buku
                     </button>
+
+                    <a href="{{ route('books.index') }}"
+                        class="px-5 py-3 bg-gray-300 text-gray-700 font-medium rounded-lg shadow-md hover:bg-gray-400 transition ease-in-out duration-300">
+                        Batal
+                    </a>
                 </div>
             </form>
         </div>
