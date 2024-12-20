@@ -96,4 +96,66 @@ class ProfileTest extends TestCase
 
         $this->assertNotNull($user->fresh());
     }
+
+    public function test_update_profile_with_minimum_data()
+    {
+        $user = User::factory()->create();
+
+        $this->actingAs($user)
+            ->patch(route('profile.update'), [
+                'name' => 'A', // minimum length
+                'email' => 'a@test.com',
+            ])
+            ->assertRedirect(route('profile.edit'))
+            ->assertSessionHas('status', 'profile-updated');
+
+        $this->assertDatabaseHas('users', [
+            'id' => $user->id,
+            'name' => 'A',
+            'email' => 'a@test.com',
+        ]);
+    }
+
+    /**
+     * Test updating profile with maximum data.
+     */
+    public function test_update_profile_with_maximum_data()
+    {
+        $user = User::factory()->create();
+
+        $this->actingAs($user)
+            ->patch(route('profile.update'), [
+                'name' => str_repeat('A', 255), // maximum length
+                'email' => 'max_length@test.com',
+            ])
+            ->assertRedirect(route('profile.edit'))
+            ->assertSessionHas('status', 'profile-updated');
+
+        $this->assertDatabaseHas('users', [
+            'id' => $user->id,
+            'name' => str_repeat('A', 255),
+            'email' => 'max_length@test.com',
+        ]);
+    }
+
+    public function test_update_profile_with_non_latin_characters()
+    {
+        $user = User::factory()->create();
+
+        $nonLatinName = '张伟'; // Chinese characters
+
+        $this->actingAs($user)
+            ->patch(route('profile.update'), [
+                'name' => $nonLatinName,
+                'email' => 'nonlatin@test.com',
+            ])
+            ->assertRedirect(route('profile.edit'))
+            ->assertSessionHas('status', 'profile-updated');
+
+        $this->assertDatabaseHas('users', [
+            'id' => $user->id,
+            'name' => $nonLatinName,
+            'email' => 'nonlatin@test.com',
+        ]);
+    }
 }
