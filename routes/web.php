@@ -38,6 +38,7 @@ Route::middleware(['auth', 'verified', RoleMiddleware::class . ':admin'])->group
     // Route Edit dan Update Buku
     Route::get('/books/{book}/edit', [BookController::class, 'edit'])->name('books.edit');
     Route::put('/books/{book}', [BookController::class, 'update'])->name('books.update');
+    Route::delete('/books/{book}', [BookController::class, 'destroy'])->name('books.destroy'); // Tambahkan route ini
 });
 
 // Middleware untuk user biasa dengan role "user"
