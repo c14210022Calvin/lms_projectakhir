@@ -61,11 +61,20 @@
 
                         <!-- Tombol Edit -->
                         @if (Auth::user()->role === 'admin')
-                            <div class="flex justify-end">
+                            <div class="flex justify-end space-x-4 mt-4">
                                 <a href="{{ route('books.edit', $book->id) }}"
-                                    class="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition ease-in-out duration-300">
+                                    class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition">
                                     Edit
                                 </a>
+                                <form action="{{ route('books.destroy', $book->id) }}" method="POST"
+                                    onsubmit="return confirm('Yakin ingin menghapus buku ini?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit"
+                                        class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition">
+                                        Hapus
+                                    </button>
+                                </form>
                             </div>
                         @endif
                     </div>
