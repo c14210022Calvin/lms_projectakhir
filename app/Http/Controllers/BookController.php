@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Book;
 use App\Http\Controllers\Controller;
+use Illuminate\Validation\ValidationException;
 use Illuminate\Http\Request;
 
 class BookController extends Controller
@@ -70,11 +71,11 @@ class BookController extends Controller
         \Log::info('Request Data: ', $request->all());
         try {
             $validated = $request->validate([
-                'title' => 'required',
-                'author' => 'required',
-                'year' => 'required|integer',
-                'isbn' => 'required|unique:books',
-                'copies' => 'required|integer',
+                'title' => 'required|string|min:1',
+                'author' => 'required|string|min:1',
+                'year' => 'required|integer|min:1900|max:' . date('Y'),
+                'isbn' => 'required|unique:books|string|min:10',
+                'copies' => 'required|integer|min:0',
             ]);
 
             // return Book::create($validated);
@@ -88,9 +89,11 @@ class BookController extends Controller
             if ($request->wantsJson()) {
                 return response()->json($book, 201);
             }
-
             // Redirect ke halaman daftar buku dengan pesan sukses
             return redirect()->route('books.index')->with('success', 'Buku berhasil ditambahkan!');
+        } catch (ValidationException $e) {
+            \Log::error('Validation Error:', $e->errors());
+            return response()->json(['errors' => $e->errors()], 422);
         } catch (\Exception $e) {
             \Log::error('Error Creating Book:', ['message' => $e->getMessage()]);
             return response()->json(['error' => 'Failed to create book', 'message' => $e->getMessage()], 500);
