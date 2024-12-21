@@ -25,6 +25,11 @@
                             {{ __('Users') }}
                         </x-nav-link>
                     @endif
+                    @if (Auth::user() && Auth::user()->role === 'user')
+                        <x-nav-link :href="route('loan.index')" :active="request()->routeIs('loan.index')">
+                            {{ __('Loan') }}
+                        </x-nav-link>
+                    @endif
 
                 </div>
             </div>

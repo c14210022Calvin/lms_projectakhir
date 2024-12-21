@@ -1,56 +1,64 @@
 <x-app-layout>
     <div class="bg-gray-50 min-h-screen py-12">
-        <h1 class="text-center text-3xl font-bold">Borrow a Book</h1>
-    
-    @if (session('success'))
-        <p style="color: green;">{{ session('success') }}</p>
-    @endif
+        <div class="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-8">
+            <h1 class="text-center text-3xl font-bold mb-6 text-gray-800">Borrow a Book</h1>
 
-    @if ($errors->any())
-        <ul style="color: red;">
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    @endif
+            <!-- Success Message -->
+            @if (session('success'))
+                <div class="bg-green-100 text-green-800 p-4 rounded mb-6">
+                    {{ session('success') }}
+                </div>
+            @endif
 
-    <!-- Form -->
-    <form class="o-4 border w-3/4 mx-auto flex flex-col items-center justify-center space-y-10" method="POST" action="{{ route('loan.store') }}">
-        @csrf
-
-        <div class="flex space-x-10">
-            <!-- Dropdown for Book Selection -->
-            <x-dropdown align="left" width="48">
-                <x-slot name="trigger">
-                    <button class="px-4 py-2 bg-blue-500 text-white rounded">Select a Book</button>
-                </x-slot>
-                <x-slot name="content">
+            <!-- Error Messages -->
+            @if ($errors->any())
+                <div class="bg-red-100 text-red-800 p-4 rounded mb-6">
                     <ul>
-                        @foreach ($books as $book)
-                            <li>
-                                <label>
-                                    <input type="radio" name="book_id" value="{{ $book->id }}" required>
-                                    {{ $book->title }}
-                                </label>
-                            </li>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
                         @endforeach
                     </ul>
-                </x-slot>
-            </x-dropdown>
+                </div>
+            @endif
 
-            <!-- Dropdown for Members -->
-            <label for="member_id">Select a Member:</label>
-            <select id="member_id" name="member_id" required>
-                <option value="" disabled selected>-- Select a Member --</option>
-                @foreach ($members as $member)
-                    <option value="{{ $member->id }}">{{ $member->name }}</option>
-                @endforeach
-            </select>
-            <br><br>
+            <!-- Form -->
+            <form method="POST" action="{{ route('loan.store') }}" class="space-y-6">
+                @csrf
+
+                <!-- Book Selection -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2" for="book_id">Select a Book</label>
+                    <select id="book_id" name="book_id"
+                        class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                        required>
+                        <option value="" disabled selected>-- Select a Book --</option>
+                        @foreach ($books as $book)
+                            <option value="{{ $book->id }}">{{ $book->title }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <!-- Member Selection -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2" for="member_id">Select a Member</label>
+                    <select id="member_id" name="member_id"
+                        class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                        required>
+                        <option value="" disabled selected>-- Select a Member --</option>
+                        @foreach ($members as $member)
+                            <option value="{{ $member->id }}">{{ $member->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="text-center">
+                    <button type="submit"
+                        class="w-full bg-blue-500 text-white py-2 px-4 rounded-lg shadow hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                        Borrow Book
+                    </button>
+                </div>
+            </form>
         </div>
-        
-
-        <button  type="submit"  class="p-3 bg-blue-500 text-white rounded-md">Borrow Book</button>
     </div>
-
 </x-app-layout>
