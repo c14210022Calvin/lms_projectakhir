@@ -3,6 +3,7 @@
 use App\Http\Controllers\NoteController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\LoanController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\RoleMiddleware;
 use Illuminate\Support\Facades\Route;
@@ -47,6 +48,8 @@ Route::middleware(['auth', 'verified', RoleMiddleware::class . ':admin'])->group
 // Middleware untuk user biasa dengan role "user"
 Route::middleware(['auth', RoleMiddleware::class . ':user'])->group(function () {
     // Profile routes khusus untuk User
+    Route::get('/books/loan', [LoanController::class, 'index'])->name('loan.index');
+    Route::post('/books/loan', [LoanController::class, 'borrow'])->name('loan.store');
 });
 
 Route::middleware('auth')->group(function () {
