@@ -113,6 +113,8 @@ class BookController extends Controller
         return Book::findOrFail($id);
     }
 
+    
+
     /**
      * Show the form for editing the specified resource.
      */
