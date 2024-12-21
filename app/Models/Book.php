@@ -9,4 +9,10 @@ class Book extends Model
 {
     use HasFactory;
     protected $fillable = ['isbn', 'title', 'copies', 'author', 'year'];
+
+    public function show($id)
+    {
+        $book = Book::with('detail')->findOrFail($id); // Load book along with its details
+        return view('books.show', compact('book'));
+    }
 }
