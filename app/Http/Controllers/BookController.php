@@ -110,10 +110,12 @@ class BookController extends Controller
     public function show($id)
     {
         //
-        return Book::findOrFail($id);
+        $book = Book::with('detail')->findOrFail($id); // Load book along with its details
+        return view('books.show', compact('book'));
+        // return Book::findOrFail($id);
     }
 
-    
+
 
     /**
      * Show the form for editing the specified resource.

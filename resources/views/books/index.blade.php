@@ -41,27 +41,29 @@
             @endif
 
             <!-- Grid Container -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
                 @forelse ($books as $book)
                     <div
-                        class="bg-white shadow-lg rounded-lg p-5 border hover:shadow-2xl transition-transform transform hover:-translate-y-1">
-                        <h3 class="text-xl font-semibold mb-3 text-gray-800">{{ $book->title }}</h3>
-                        <p class="text-sm text-gray-600 mb-1">
+                        class="bg-white shadow-lg rounded-lg p-5 border hover:shadow-2xl transition-transform transform hover:-translate-y-1 h-full">
+                        <a href="{{ route('books.show', $book->id) }}" class="block">
+                            <h3 class="text-xl font-semibold mb-2 text-gray-800">{{ $book->title }}</h3>
+                        </a>
+                        <p class="text-sm text-gray-600 mb-2">
                             <strong>Penulis:</strong> {{ $book->author }}
                         </p>
-                        <p class="text-sm text-gray-600 mb-1">
+                        <p class="text-sm text-gray-600 mb-2">
                             <strong>Tahun:</strong> {{ $book->year }}
                         </p>
-                        <p class="text-sm text-gray-600 mb-1">
+                        <p class="text-sm text-gray-600 mb-2">
                             <strong>ISBN:</strong> {{ $book->isbn }}
                         </p>
                         <p class="text-sm text-gray-600 mb-3">
                             <strong>Salinan:</strong> {{ $book->copies }}
                         </p>
 
-                        <!-- Tombol Edit -->
+                        <!-- Tombol Edit dan Hapus -->
                         @if (Auth::user()->role === 'admin')
-                            <div class="flex justify-end space-x-4 mt-4">
+                            <div class="flex justify-end space-x-4 mt-auto">
                                 <a href="{{ route('books.edit', $book->id) }}"
                                     class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition">
                                     Edit
