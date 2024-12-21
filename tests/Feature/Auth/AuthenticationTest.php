@@ -38,6 +38,9 @@ class AuthenticationTest extends TestCase
             'email' => $user->email,
             'password' => 'wrong-password',
         ]);
+        // Debug: Periksa status autentikasi
+        \Log::info('User is authenticated: ', ['authenticated' => auth()->check()]);
+        dump(auth()->check()); // false jika pengguna tidak terautentikasi
 
         $this->assertGuest();
     }
@@ -46,7 +49,23 @@ class AuthenticationTest extends TestCase
     {
         $user = User::factory()->create();
 
-        $response = $this->actingAs($user)->post('/logout');
+        // Lakukan autentikasi dengan actingAs sebelum log status
+        $this->actingAs($user);
+
+        // Log status sebelum logout
+        \Log::info('Before logout', [
+            'authenticated' => auth()->check(),
+            'user' => auth()->user(),
+        ]);
+
+        // $response = $this->actingAs($user)->post('/logout');
+        $response = $this->post('/logout');
+
+        // Log status setelah logout
+        \Log::info('After logout', [
+            'authenticated' => auth()->check(),  // Harus false setelah logout
+            'user' => auth()->user(),           // Harus null setelah logout
+        ]);
 
         $this->assertGuest();
         $response->assertRedirect('/');
